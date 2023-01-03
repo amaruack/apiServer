@@ -20,16 +20,20 @@ public interface ShopHistoryRepository extends JpaRepository<ShopHistory, LocalD
             findData.setRegisterCount(updateRequest.getRegisterCount());
         }
 
-        if(updateRequest.getRegisterCount() != null) {
-            findData.setRegisterCount(updateRequest.getRegisterCount());
+        if(updateRequest.getDeleteCount() != null) {
+            findData.setDeleteCount(updateRequest.getDeleteCount());
         }
 
-        if(updateRequest.getRegisterCount() != null) {
-            findData.setRegisterCount(updateRequest.getRegisterCount());
+        if(updateRequest.getPayment() != null) {
+            findData.setPayment(updateRequest.getPayment());
         }
 
-        if(updateRequest.getRegisterCount() != null) {
-            findData.setRegisterCount(updateRequest.getRegisterCount());
+        if(updateRequest.getUsed() != null) {
+            findData.setUsed(updateRequest.getUsed());
+        }
+
+        if(updateRequest.getSales() != null) {
+            findData.setSales(updateRequest.getSales());
         }
 
         saveAndFlush(findData);
