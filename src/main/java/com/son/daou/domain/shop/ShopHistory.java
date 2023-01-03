@@ -1,6 +1,7 @@
 package com.son.daou.domain.shop;
 
 import com.son.daou.domain.DaouEntity;
+import com.son.daou.dto.shop.ShopHistoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,5 +49,16 @@ public class ShopHistory implements DaouEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public ShopHistoryResponse toResponse(){
+        return ShopHistoryResponse.builder()
+                .dateTime(dateTime)
+                .registerCount(registerCount)
+                .deleteCount(deleteCount)
+                .payment(payment)
+                .used(used)
+                .sales(sales)
+            .build();
+    }
 
 }
