@@ -1,7 +1,8 @@
-package com.son.daou.dao;
+package com.son.daou.dao.shop;
 
-import com.son.daou.domain.ShopHistory;
-import com.son.daou.dto.ShopHistoryQueryParam;
+import com.son.daou.dao.RepositorySearch;
+import com.son.daou.domain.shop.ShopHistory;
+import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,10 +1,11 @@
-package com.son.daou.dao;
+package com.son.daou.dao.shop;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.son.daou.dao.AbstractRepositorySearch;
 import com.son.daou.domain.QShopHistory;
-import com.son.daou.domain.ShopHistory;
-import com.son.daou.dto.ShopHistoryQueryParam;
+import com.son.daou.domain.shop.ShopHistory;
+import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

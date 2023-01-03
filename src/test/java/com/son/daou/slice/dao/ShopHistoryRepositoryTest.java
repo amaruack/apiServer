@@ -1,9 +1,9 @@
 package com.son.daou.slice.dao;
 
 import com.son.daou.config.QuerydslConfig;
-import com.son.daou.dao.ShopHistoryRepository;
-import com.son.daou.domain.ShopHistory;
-import com.son.daou.dto.ShopHistoryQueryParam;
+import com.son.daou.dao.shop.ShopHistoryRepository;
+import com.son.daou.domain.shop.ShopHistory;
+import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

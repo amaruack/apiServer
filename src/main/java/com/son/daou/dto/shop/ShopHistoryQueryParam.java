@@ -1,5 +1,6 @@
-package com.son.daou.dto;
+package com.son.daou.dto.shop;
 
+import com.son.daou.dto.QueryParam;
 import lombok.Builder;
 import lombok.Data;
 

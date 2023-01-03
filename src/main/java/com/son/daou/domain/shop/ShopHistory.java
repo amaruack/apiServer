@@ -1,5 +1,6 @@
-package com.son.daou.domain;
+package com.son.daou.domain.shop;
 
+import com.son.daou.domain.DaouEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
