@@ -12,6 +12,14 @@ import java.util.List;
 
 public class TxtFileReader extends AbstractFileReader {
 
+    private final char DEFAULT_SEPARATOR = '|';
+    private final char DEFAULT_QUOTE = '"';
+
+    public TxtFileReader() {
+        super.separator = DEFAULT_SEPARATOR;
+        super.quoteChar = DEFAULT_QUOTE;
+    }
+
     @Override
     public List<String[]> read(File file) {
         List<String[]> result;

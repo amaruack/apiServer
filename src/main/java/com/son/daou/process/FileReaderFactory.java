@@ -27,7 +27,6 @@ public class FileReaderFactory {
                 break;
             case TXT:
                 fileReader = new TxtFileReader();
-                fileReader.setSeparator('|');
                 break;
             default:
                 String message = "NOT ACCEPTED FILE EXTENSION";

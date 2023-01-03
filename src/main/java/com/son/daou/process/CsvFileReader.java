@@ -12,6 +12,14 @@ import java.util.List;
 
 public class CsvFileReader extends AbstractFileReader{
 
+    private final char DEFAULT_SEPARATOR = ',';
+    private final char DEFAULT_QUOTE = '"';
+
+    public CsvFileReader() {
+        super.separator = DEFAULT_SEPARATOR;
+        super.quoteChar = DEFAULT_QUOTE;
+    }
+
     @Override
     public List<String[]> read(File file) {
         List<String[]> result;
