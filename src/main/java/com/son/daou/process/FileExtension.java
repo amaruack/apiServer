@@ -19,7 +19,7 @@ public enum FileExtension {
 
     public static Optional<FileExtension> getFileExtension(String name) {
         for (FileExtension fileExtension : FileExtension.values()){
-            if (fileExtension.getName().equals(name)){
+            if (fileExtension.getName().equalsIgnoreCase(name)){
                 return Optional.of(fileExtension);
             }
         }
@@ -28,7 +28,7 @@ public enum FileExtension {
 
     public static boolean contains(String name) {
         for (FileExtension fileExtension : FileExtension.values()){
-            if (fileExtension.getName().equals(name)){
+            if (fileExtension.getName().equalsIgnoreCase(name)){
                 return true;
             }
         }

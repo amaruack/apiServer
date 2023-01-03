@@ -20,7 +20,7 @@ public class FileReaderFactory {
      * @return
      */
     public static FileReader getFileReader(FileExtension fileExtension){
-        FileReader fileReader;
+        FileReader fileReader = null;
         switch (fileExtension) {
             case CSV:
                 fileReader = new CsvFileReader();
@@ -28,9 +28,6 @@ public class FileReaderFactory {
             case TXT:
                 fileReader = new TxtFileReader();
                 break;
-            default:
-                String message = "NOT ACCEPTED FILE EXTENSION";
-                throw new RuntimeException(message);
         }
         return fileReader;
     }

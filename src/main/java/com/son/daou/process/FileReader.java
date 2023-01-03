@@ -8,5 +8,6 @@ public interface FileReader {
     List<String[]> read(File file);
     void setSeparator(char separator);
     void setQuoteChar(char quoteChar);
+    boolean validate(List<String[]> readDatas);
 
 }
