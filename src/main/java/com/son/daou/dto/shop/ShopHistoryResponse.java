@@ -1,22 +1,22 @@
 package com.son.daou.dto.shop;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.hateoas.server.core.Relation;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Relation(collectionRelation = "content")
 public class ShopHistoryResponse {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH", timezone = "Asia/Seoul")
     LocalDateTime dateTime;
     Integer registerCount;
     Integer deleteCount;

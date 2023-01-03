@@ -1,5 +1,6 @@
 package com.son.daou.dto.shop;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.son.daou.domain.shop.ShopHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ShopHistoryCreateRequest {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH", timezone = "Asia/Seoul")
     LocalDateTime dateTime;
     Integer registerCount;
     Integer deleteCount;
