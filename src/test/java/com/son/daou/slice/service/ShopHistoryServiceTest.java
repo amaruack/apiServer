@@ -60,18 +60,18 @@ class ShopHistoryServiceTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
 
         createRequest2 = ShopHistoryCreateRequest.builder()
                 .dateTime(now.plus(1, ChronoUnit.HOURS))
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
         
         updateRequest1 = ShopHistoryUpdateRequest.builder()
@@ -130,7 +130,7 @@ class ShopHistoryServiceTest {
         } );
 
         // then
-        assertEquals(String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), history1.getDateTime()),
+        assertEquals(String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)),
                 exception.getMessage());
         assertEquals(ErrorCode.CONFLICT, exception.getErrorCode());
     }

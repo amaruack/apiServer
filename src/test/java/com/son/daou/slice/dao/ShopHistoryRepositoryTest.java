@@ -42,9 +42,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
 
         //when
@@ -62,9 +62,9 @@ public class ShopHistoryRepositoryTest {
         ShopHistory shopHistory = ShopHistory.builder()
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
 
         //when // then
@@ -84,9 +84,9 @@ public class ShopHistoryRepositoryTest {
                     .dateTime(now.plus(i, ChronoUnit.HOURS))
                     .registerCount(10)
                     .deleteCount(20)
-                    .payment(10000)
-                    .used(20000)
-                    .sales(300000)
+                    .payment(10000L)
+                    .used(20000L)
+                    .sales(300000L)
                     .build();
             list.add(shopHistory);
         }
@@ -110,9 +110,9 @@ public class ShopHistoryRepositoryTest {
                     .dateTime(now.plus(i, ChronoUnit.HOURS))
                     .registerCount(10)
                     .deleteCount(20)
-                    .payment(10000)
-                    .used(20000)
-                    .sales(300000)
+                    .payment(10000L)
+                    .used(20000L)
+                    .sales(300000L)
                     .build();
             list.add(shopHistory);
         }
@@ -140,9 +140,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
         shopHistoryRepository.save(shopHistory);
 
@@ -170,9 +170,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
         shopHistoryRepository.save(shopHistory);
 
@@ -198,9 +198,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
         shopHistoryRepository.save(shopHistory);
         LocalDateTime notInId = now.minus(1, ChronoUnit.HOURS);
@@ -221,9 +221,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
 
         shopHistoryRepository.save(shopHistory);
@@ -233,9 +233,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(shopHistory.getDateTime())
                 .registerCount(1)
                 .deleteCount(1)
-                .payment(1)
-                .used(1)
-                .sales(1)
+                .payment(1L)
+                .used(1L)
+                .sales(1L)
                 .build();
         ShopHistory updatedEntity = shopHistoryRepository.update(updateHistory);
         Optional<ShopHistory> findObj = shopHistoryRepository.findById(updatedEntity.getDateTime());
@@ -259,15 +259,15 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
         shopHistoryRepository.save(shopHistory);
 
         ShopHistory updateHistory = ShopHistory.builder()
                 .dateTime(shopHistory.getDateTime().minus(4, ChronoUnit.HOURS))
-                .sales(22)
+                .sales(22L)
                 .build();
         //when
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -288,9 +288,9 @@ public class ShopHistoryRepositoryTest {
                 .dateTime(now)
                 .registerCount(10)
                 .deleteCount(20)
-                .payment(10000)
-                .used(20000)
-                .sales(300000)
+                .payment(10000L)
+                .used(20000L)
+                .sales(300000L)
                 .build();
         shopHistoryRepository.save(shopHistory);
 

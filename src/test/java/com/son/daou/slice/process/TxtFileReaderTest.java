@@ -23,12 +23,12 @@ public class TxtFileReaderTest {
 
         //when
         FileReader fileReader = new TxtFileReader();
-        List<String[]> readDatas = fileReader.read(file);
+        List<List<String>> readDatas = fileReader.read(file);
 
         //then
         assertEquals(24, readDatas.size());
-        assertEquals(6, readDatas.get(2).length);
-        assertArrayEquals(readDatas.get(2), new String[]{"2022-07-22 02","24","4","45,100","27,300","95,000"});
+        assertEquals(6, readDatas.get(2).size());
+        assertEquals(readDatas.get(2), List.of( new String[]{"2022-07-22 02","24","4","45,100","27,300","95,000"}));
 
     }
 
@@ -39,11 +39,11 @@ public class TxtFileReaderTest {
 
         //when
         FileReader fileReader = new TxtFileReader();
-        List<String[]> readDatas = fileReader.read(file);
+        List<List<String>> readDatas = fileReader.read(file);
 
         //then
         assertEquals(24, readDatas.size());
-        assertNotEquals(6, readDatas.get(2).length);
+        assertNotEquals(6, readDatas.get(2).size());
 
     }
 
