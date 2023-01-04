@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,12 +17,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ShopHistoryCreateRequest {
 
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH", timezone = "Asia/Seoul")
     LocalDateTime dateTime;
+
+    @NotNull
+    @PositiveOrZero
     Integer registerCount;
+
+    @NotNull
+    @PositiveOrZero
     Integer deleteCount;
+
+    @NotNull
     Integer payment;
+
+    @NotNull
     Integer used;
+
+    @NotNull
     Integer sales;
 
     public ShopHistory toEntity(){
