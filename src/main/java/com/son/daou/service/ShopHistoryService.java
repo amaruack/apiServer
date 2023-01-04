@@ -8,6 +8,7 @@ import com.son.daou.dto.shop.ShopHistoryCreateRequest;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
+import com.son.daou.util.DateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class ShopHistoryService {
 
     public ShopHistoryResponse findById(LocalDateTime id) throws ApiException {
         ShopHistory shopHistory = repository.findById(id).orElseThrow(() -> {
-            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), id);
+            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), id.format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
             logger.error(detailErrorMessage);
             throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
         });
@@ -74,7 +75,7 @@ public class ShopHistoryService {
     @Transactional
     public ShopHistoryResponse delete(LocalDateTime id) {
         ShopHistory findData = repository.findById(id).orElseThrow(() -> {
-            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), id);
+            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), id.format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
             logger.error(detailErrorMessage);
             throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
         });
