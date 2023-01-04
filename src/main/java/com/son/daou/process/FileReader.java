@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface FileReader {
 
-    List<String[]> read(File file);
-    void setSeparator(char separator);
+    List<List<String>> read(File file);
+    void setSeparator(String separator);
     void setQuoteChar(char quoteChar);
-    boolean validate(List<String[]> readDatas);
+    boolean validate(List<List<String>> readDatas);
 
 }

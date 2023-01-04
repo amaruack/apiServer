@@ -4,10 +4,10 @@ import java.util.List;
 
 public abstract class AbstractFileReader implements FileReader{
 
-    protected char separator = ',';
+    protected String separator = ",";
     protected char quoteChar = '"';
 
-    public void setSeparator(char separator) {
+    public void setSeparator(String separator) {
         this.separator = separator;
     }
 
@@ -21,14 +21,14 @@ public abstract class AbstractFileReader implements FileReader{
      *
      * @return
      */
-    public boolean validate(List<String[]> readDatas) {
+    public boolean validate(List<List<String>> readDatas) {
 
         if (readDatas.size() != 24) {
             return false;
         }
 
-        for (String[] strings : readDatas ) {
-            if (strings.length != 6) {
+        for (List<String> strings : readDatas ) {
+            if (strings.size() != 6) {
                 return false;
             }
         }
