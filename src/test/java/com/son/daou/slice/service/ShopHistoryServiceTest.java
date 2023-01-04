@@ -9,6 +9,7 @@ import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
 import com.son.daou.service.ShopHistoryService;
+import com.son.daou.util.DateTimeUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -164,7 +165,7 @@ class ShopHistoryServiceTest {
         } );
 
         // then
-        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime()),
+        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)),
                 exception.getMessage());
         assertEquals(ErrorCode.NOT_FOUND_DATA, exception.getErrorCode());
     }
@@ -220,7 +221,7 @@ class ShopHistoryServiceTest {
         } );
 
         // then
-        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime()), exception.getMessage());
+        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)), exception.getMessage());
     }
 
 }

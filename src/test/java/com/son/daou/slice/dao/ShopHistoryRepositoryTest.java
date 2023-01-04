@@ -1,9 +1,11 @@
 package com.son.daou.slice.dao;
 
+import com.son.daou.common.ErrorCode;
 import com.son.daou.config.QuerydslConfig;
 import com.son.daou.dao.shop.ShopHistoryRepository;
 import com.son.daou.domain.shop.ShopHistory;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
+import com.son.daou.util.DateTimeUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -272,8 +274,10 @@ public class ShopHistoryRepositoryTest {
             ShopHistory updateObj = shopHistoryRepository.update(updateHistory) ;
         });
 
+
         //then
-        assertEquals("NOT FOUND", exception.getMessage());
+        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), updateHistory.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)),
+                exception.getMessage());
     }
 
     @Test
