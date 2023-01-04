@@ -1,8 +1,11 @@
 package com.son.daou.dao.shop;
 
+import com.son.daou.common.ErrorCode;
+import com.son.daou.common.exception.ApiException;
 import com.son.daou.dao.RepositorySearch;
 import com.son.daou.domain.shop.ShopHistory;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
+import com.son.daou.util.DateTimeUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +16,8 @@ public interface ShopHistoryRepository extends JpaRepository<ShopHistory, LocalD
 
     default ShopHistory update(ShopHistory updateRequest) {
         ShopHistory findData = findById(updateRequest.getDateTime()).orElseThrow(() -> {
-            throw new RuntimeException("NOT FOUND"); // TODO 임시처리 나중에 통합 exception 처리
+            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), updateRequest.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
+            throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
         });
 
         if(updateRequest.getRegisterCount() != null) {
