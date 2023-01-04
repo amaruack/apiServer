@@ -30,13 +30,13 @@ public class ShopHistoryCreateRequest {
     Integer deleteCount;
 
     @NotNull
-    Integer payment;
+    Long payment;
 
     @NotNull
-    Integer used;
+    Long used;
 
     @NotNull
-    Integer sales;
+    Long sales;
 
     public ShopHistory toEntity(){
         return ShopHistory.builder()

@@ -20,8 +20,8 @@ public class ShopHistoryResponse {
     LocalDateTime dateTime;
     Integer registerCount;
     Integer deleteCount;
-    Integer payment;
-    Integer used;
-    Integer sales;
+    Long payment;
+    Long used;
+    Long sales;
 
 }

@@ -34,13 +34,13 @@ public class ShopHistory implements DaouEntity {
     Integer deleteCount;
 
     @Column(name = "payment")
-    Integer payment;
+    Long payment;
 
     @Column(name = "used")
-    Integer used;
+    Long used;
 
     @Column(name = "sales")
-    Integer sales;
+    Long sales;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -46,12 +48,36 @@ public class ShopHistoryService {
             // ShopHistory save
             repository.save(shopHistory);
         } else {
-            String detailErrorMessage = String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), shopHistory.getDateTime());
+            String detailErrorMessage = String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), shopHistory.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
             logger.error(detailErrorMessage);
             throw new ApiException(ErrorCode.CONFLICT, detailErrorMessage);
         }
         // response data builder
         response = shopHistory.toResponse();
+
+        return response;
+    }
+
+    @Transactional
+    public List<ShopHistoryResponse> createAll(List<ShopHistoryCreateRequest> createRequests) {
+        // response data
+        List<ShopHistoryResponse> response = null;
+        List<ShopHistory> entities = createRequests.stream().map(request -> request.toEntity()).collect(Collectors.toList());
+
+        List<LocalDateTime> ids = entities.stream().map(entity -> entity.getDateTime()).collect(Collectors.toList());
+        List<ShopHistory> findDatas = repository.findAllById(ids);
+        // ShopHistory id 중복
+        if (findDatas.size() <= 0) {
+            // ShopHistory save
+            entities = repository.saveAll(entities);
+        } else {
+            String dupleIds = findDatas.stream().map(findData -> findData.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)).collect(Collectors.joining(","));
+            String detailErrorMessage = String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), dupleIds);
+            logger.error(detailErrorMessage);
+            throw new ApiException(ErrorCode.CONFLICT, detailErrorMessage);
+        }
+        // response data builder
+        response = entities.stream().map(entity -> entity.toResponse()).collect(Collectors.toList());
 
         return response;
     }

@@ -19,9 +19,9 @@ public class ShopHistoryUpdateRequest {
     LocalDateTime dateTime;
     Integer registerCount;
     Integer deleteCount;
-    Integer payment;
-    Integer used;
-    Integer sales;
+    Long payment;
+    Long used;
+    Long sales;
 
     public ShopHistory toEntity(){
         return ShopHistory.builder()
