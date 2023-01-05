@@ -20,7 +20,7 @@ public class RequestFilter implements Filter {
         chain.doFilter(request, response);
         long end = System.currentTimeMillis();
 
-        log.info( "{} - {} / START={} / END={} / INTERVAL={}" ,
+        log.info( "{} - {} | START={} | END={} | INTERVAL={}" ,
                 ((HttpServletRequest) request).getMethod(),
                 ((HttpServletRequest) request).getRequestURI(),
                 LocalDateTime.ofEpochSecond(start / 1000L, (int)(start % 1000L), DateTimeUtils.ZONE_OFFSET),
