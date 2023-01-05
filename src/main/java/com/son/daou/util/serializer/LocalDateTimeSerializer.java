@@ -1,6 +1,7 @@
-package com.son.daou.util;
+package com.son.daou.util.serializer;
 
 import com.google.gson.*;
+import com.son.daou.util.DateTimeUtils;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;

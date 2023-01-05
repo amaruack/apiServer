@@ -1,4 +1,4 @@
-package com.son.daou.service;
+package com.son.daou.service.shop;
 
 import com.son.daou.common.ErrorCode;
 import com.son.daou.common.exception.ApiException;
@@ -9,8 +9,7 @@ import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
 import com.son.daou.util.DateTimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 public class ShopHistoryService {
-
-    private Logger logger = LoggerFactory.getLogger(ShopHistoryService.class);
 
     @Autowired
     private ShopHistoryRepository repository;
@@ -49,7 +47,7 @@ public class ShopHistoryService {
             repository.save(shopHistory);
         } else {
             String detailErrorMessage = String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), shopHistory.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
-            logger.error(detailErrorMessage);
+            log.error(detailErrorMessage);
             throw new ApiException(ErrorCode.CONFLICT, detailErrorMessage);
         }
         // response data builder
@@ -73,7 +71,7 @@ public class ShopHistoryService {
         } else {
             String dupleIds = findDatas.stream().map(findData -> findData.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)).collect(Collectors.joining(","));
             String detailErrorMessage = String.format(ErrorCode.CONFLICT.getDetailMessageFormat(), dupleIds);
-            logger.error(detailErrorMessage);
+            log.error(detailErrorMessage);
             throw new ApiException(ErrorCode.CONFLICT, detailErrorMessage);
         }
         // response data builder
@@ -85,7 +83,7 @@ public class ShopHistoryService {
     public ShopHistoryResponse findById(LocalDateTime id) throws ApiException {
         ShopHistory shopHistory = repository.findById(id).orElseThrow(() -> {
             String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), id.format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
-            logger.error(detailErrorMessage);
+            log.error(detailErrorMessage);
             throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
         });
         return shopHistory.toResponse();
@@ -93,6 +91,11 @@ public class ShopHistoryService {
 
     @Transactional
     public ShopHistoryResponse update(ShopHistoryUpdateRequest shopHistoryUpdateRequest) {
+        if (!repository.existsById(shopHistoryUpdateRequest.getDateTime())) {
+            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), shopHistoryUpdateRequest.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
+            log.error(detailErrorMessage);
+            throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
+        };
         return repository
                 .update(shopHistoryUpdateRequest.toEntity())
                 .toResponse();
@@ -100,9 +103,10 @@ public class ShopHistoryService {
 
     @Transactional
     public ShopHistoryResponse delete(LocalDateTime id) {
+
         ShopHistory findData = repository.findById(id).orElseThrow(() -> {
             String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), id.format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
-            logger.error(detailErrorMessage);
+            log.error(detailErrorMessage);
             throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
         });
         repository.delete(findData);
