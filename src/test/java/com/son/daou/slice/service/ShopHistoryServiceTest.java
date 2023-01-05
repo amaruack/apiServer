@@ -8,7 +8,7 @@ import com.son.daou.dto.shop.ShopHistoryCreateRequest;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
-import com.son.daou.service.ShopHistoryService;
+import com.son.daou.service.shop.ShopHistoryService;
 import com.son.daou.util.DateTimeUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

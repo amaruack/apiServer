@@ -2,6 +2,7 @@ package com.son.daou.dto.shop;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.son.daou.domain.shop.ShopHistory;
+import com.son.daou.util.DateTimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 public class ShopHistoryCreateRequest {
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateTimeUtils.DATE_TIME_ID_PATTERN, timezone = DateTimeUtils.ZONE_NAME)
     LocalDateTime dateTime;
 
     @NotNull

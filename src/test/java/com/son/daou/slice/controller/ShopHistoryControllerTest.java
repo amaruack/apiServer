@@ -4,16 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.son.daou.common.ErrorCode;
 import com.son.daou.common.exception.ApiException;
-import com.son.daou.config.SecurityConfig;
 import com.son.daou.controller.shop.ShopHistoryController;
 import com.son.daou.domain.shop.ShopHistory;
 import com.son.daou.dto.shop.ShopHistoryCreateRequest;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
-import com.son.daou.service.ShopHistoryService;
+import com.son.daou.service.shop.ShopHistoryService;
 import com.son.daou.util.DateTimeUtils;
-import com.son.daou.util.LocalDateTimeSerializer;
+import com.son.daou.util.serializer.LocalDateTimeSerializer;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(value = ShopHistoryController.class )
-@Import({SecurityConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ShopHistoryControllerTest {
 
