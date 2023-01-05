@@ -41,7 +41,6 @@ public class ShopHistoryController extends PageableController<ShopHistoryRespons
     }
 
     @GetMapping(value = "")
-    @PerformanceLogging
     public ResponseEntity<PagedModel<EntityModel<ShopHistoryResponse>>> search(
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH")
             @RequestParam(name = "startDatetime", required = false) LocalDateTime startDatetime,
