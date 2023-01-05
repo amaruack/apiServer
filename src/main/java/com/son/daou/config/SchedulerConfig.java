@@ -42,8 +42,7 @@ public class SchedulerConfig {
 
     private final NumberFormat numberFormat = NumberFormat.getInstance();
 
-//    @Scheduled(cron = "0/5 * * * * *")
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void cronJobSch() {
 
         File path = new File(daouConfigProperties.getRootPath());
@@ -83,9 +82,6 @@ public class SchedulerConfig {
             }
             // TODO 읽은 파일 이동 // 성공 실패에 따라 이동
         }
-
-
-
     }
 
 }
