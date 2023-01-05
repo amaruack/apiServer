@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 	<!--로그 파일 저장 위치 -->
-	<springProfile name="dev">
-		<property name="LOGS_PATH" value="./logs" />
-	</springProfile>
-
+	<property  name="LOGS_PATH" value="./logs"/>
 	<springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -16,14 +13,13 @@
 	<appender name="COM_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<prudent>true</prudent>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOGS_PATH}/${APPLICATION_NAME}.%d{yyyyMMddHH}.log</fileNamePattern>
+			<fileNamePattern>${LOGS_PATH}/${APPLICATION_NAME}_%d{yyyyMMddHH}.log</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
-			<pattern>[%d{yyyy-MM-dd HH:mm:ss}]-[%highlight(%-5level)]-[%class:%line]-[%method]-[%message]%n</pattern>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}]-[%-5level]-[%class:%line]-[%method]-[%message]%n</pattern>
 		</encoder>
 	</appender>
-
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
