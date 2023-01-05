@@ -3,7 +3,7 @@ package com.son.daou.dao.shop;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.son.daou.dao.AbstractRepositorySearch;
-import com.son.daou.domain.QShopHistory;
+import com.son.daou.domain.shop.QShopHistory;
 import com.son.daou.domain.shop.ShopHistory;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,10 @@ import java.util.List;
 public class ShopHistoryRepositoryImpl extends AbstractRepositorySearch<ShopHistory, ShopHistoryQueryParam> {
 
     private final JPAQueryFactory jpaQueryFactory;
-
-    QShopHistory root = QShopHistory.shopHistory;
+    private final QShopHistory root = QShopHistory.shopHistory;
 
     @Override
     public Page<ShopHistory> search(ShopHistoryQueryParam queryParam, Pageable pageable) {
-
         List<ShopHistory> fetched = jpaQueryFactory
                 .select(root)
                 .from(root)

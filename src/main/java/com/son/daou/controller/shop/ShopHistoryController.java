@@ -1,12 +1,13 @@
 package com.son.daou.controller.shop;
 
 import com.son.daou.common.exception.ApiException;
+import com.son.daou.config.aspect.PerformanceLogging;
 import com.son.daou.controller.PageableController;
 import com.son.daou.dto.shop.ShopHistoryCreateRequest;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
-import com.son.daou.service.ShopHistoryService;
+import com.son.daou.service.shop.ShopHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,7 @@ import java.time.LocalDateTime;
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 @RestController
-public class ShopHistoryController extends PageableController {
-
-    private final Logger logger = LoggerFactory.getLogger(ShopHistoryController.class);
+public class ShopHistoryController extends PageableController<ShopHistoryResponse> {
 
     private final ShopHistoryService service;
 
@@ -41,11 +40,8 @@ public class ShopHistoryController extends PageableController {
         this.service = service;
     }
 
-    @Autowired
-    private PagedResourcesAssembler<ShopHistoryResponse> pagedResourcesAssembler;
-
-
     @GetMapping(value = "")
+    @PerformanceLogging
     public ResponseEntity<PagedModel<EntityModel<ShopHistoryResponse>>> search(
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH")
             @RequestParam(name = "startDatetime", required = false) LocalDateTime startDatetime,
@@ -53,7 +49,7 @@ public class ShopHistoryController extends PageableController {
             @RequestParam(name = "endDatetime", required = false) LocalDateTime endDatetime,
 
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size, // rows
+            @RequestParam(name = "size", required = false, defaultValue = "24") Integer size, // rows
             @RequestParam(name = "direction", required = false, defaultValue = "DESC") String direction,  // sort direction, DESC, ASC
             @RequestParam(name = "sort", required = false) String[] sort  // sort
     ) throws ApiException {

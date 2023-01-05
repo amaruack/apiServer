@@ -1,12 +1,17 @@
 package com.son.daou.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedResourcesAssembler;
 
 import java.util.Objects;
 
-public abstract class PageableController {
+public abstract class PageableController<T> {
+
+    @Autowired
+    protected PagedResourcesAssembler<T> pagedResourcesAssembler;
 
     public Pageable getPageable(Integer page, Integer size, String direction, String[] sort){
         // sort direction, DESC, ASC

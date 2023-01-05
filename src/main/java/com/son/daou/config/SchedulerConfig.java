@@ -6,7 +6,7 @@ import com.son.daou.process.FileExtension;
 import com.son.daou.process.FileReader;
 import com.son.daou.process.FileReaderFactory;
 import com.son.daou.properties.DaouConfigProperties;
-import com.son.daou.service.ShopHistoryService;
+import com.son.daou.service.shop.ShopHistoryService;
 import com.son.daou.util.DateTimeUtils;
 import com.son.daou.util.FileUtils;
 import org.slf4j.Logger;
@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableScheduling
 public class SchedulerConfig {
-
-    private final Logger logger = LoggerFactory.getLogger(SchedulerConfig.class);
 
     @Autowired
     DaouConfigProperties daouConfigProperties;
