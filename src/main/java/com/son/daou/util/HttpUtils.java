@@ -2,54 +2,35 @@ package com.son.daou.util;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 public class HttpUtils {
+
+    private static final String[] IP_HEADER_CANDIDATES = {
+            "X-Forwarded-For",
+            "x-real-ip",
+            "x-original-forwarded-for",
+            "Proxy-Client-IP",
+            "WL-Proxy-Client-IP",
+            "HTTP_X_FORWARDED_FOR",
+            "HTTP_X_FORWARDED",
+            "HTTP_X_CLUSTER_CLIENT_IP",
+            "HTTP_CLIENT_IP",
+            "HTTP_FORWARDED_FOR",
+            "HTTP_FORWARDED",
+            "HTTP_VIA",
+            "REMOTE_ADDR"
+    };
+
     public static String getClientIp(HttpServletRequest request) {
-
-        //  split 해서 첫번 째
-        String ip = request.getHeader("X-Forwarded-For");
-
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("x-real-ip");
+        for (String header: IP_HEADER_CANDIDATES) {
+            String ipFromHeader = request.getHeader(header);
+            if (Objects.nonNull(ipFromHeader) && ipFromHeader.length() != 0 && !"unknown".equalsIgnoreCase(ipFromHeader)) {
+                String ip = ipFromHeader.split(",")[0];
+                return ip;
+            }
         }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("x-original-forwarded-for");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_X_FORWARDED");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_X_CLUSTER_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_FORWARDED_FOR");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_FORWARDED");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("HTTP_VIA");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getHeader("REMOTE_ADDR");
-        }
-        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
-            ip = request.getRemoteAddr();
-        }
-
-        return ip;
+        return request.getRemoteAddr();
     }
 
 }
