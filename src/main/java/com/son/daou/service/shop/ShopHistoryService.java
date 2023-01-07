@@ -91,11 +91,6 @@ public class ShopHistoryService {
 
     @Transactional
     public ShopHistoryResponse update(ShopHistoryUpdateRequest shopHistoryUpdateRequest) {
-        if (!repository.existsById(shopHistoryUpdateRequest.getDateTime())) {
-            String detailErrorMessage = String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), shopHistoryUpdateRequest.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER));
-            log.error(detailErrorMessage);
-            throw new ApiException(ErrorCode.NOT_FOUND_DATA, detailErrorMessage);
-        };
         return repository
                 .update(shopHistoryUpdateRequest.toEntity())
                 .toResponse();
@@ -112,5 +107,9 @@ public class ShopHistoryService {
         repository.delete(findData);
         return findData.toResponse();
     }
+
+
+
+
 
 }
