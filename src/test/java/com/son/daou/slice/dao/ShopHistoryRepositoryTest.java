@@ -274,7 +274,6 @@ public class ShopHistoryRepositoryTest {
             ShopHistory updateObj = shopHistoryRepository.update(updateHistory) ;
         });
 
-
         //then
         assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), updateHistory.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)),
                 exception.getMessage());

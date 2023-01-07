@@ -51,27 +51,4 @@ public class CsvFileReaderTest {
 
     }
 
-
-    @Test
-    void test() throws IOException {
-        File file = ResourceUtils.getFile("classpath:sample/csvFile.csv");
-        final Reader reader = new InputStreamReader(new BOMInputStream( new FileInputStream(file)), "UTF-8");
-
-        Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(reader);
-        for (CSVRecord record : records) {
-            System.out.println(String.join(",", record ));
-        }
-
-//        final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
-//        try {
-//            for (final CSVRecord record : parser) {
-//                System.out.println(String.join(",", record ));
-//            }
-//        } finally {
-//            parser.close();
-//            reader.close();
-//        }
-
-    }
-
 }

@@ -185,7 +185,7 @@ class ShopHistoryServiceTest {
     @Test
     void fail_history_info_update_not_exist_data_from_history_id() {
         // given
-        doThrow(new ApiException(ErrorCode.NOT_FOUND_DATA, String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime())))
+        doThrow(new ApiException(ErrorCode.NOT_FOUND_DATA, String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
                 .when(shopHistoryRepository).update(any());
 
         // when
@@ -194,7 +194,7 @@ class ShopHistoryServiceTest {
         } );
 
         // then
-        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime()), exception.getMessage());
+        assertEquals(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)), exception.getMessage());
     }
 
     @Test

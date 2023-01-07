@@ -1,35 +1,26 @@
-package com.son.daou.slice.controller;
+package com.son.daou.integration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.son.daou.common.ErrorCode;
-import com.son.daou.common.exception.ApiException;
-import com.son.daou.config.interceptor.IpAddressAccessInterceptor;
-import com.son.daou.config.interceptor.RateLimitInterceptor;
-import com.son.daou.controller.shop.ShopHistoryController;
-import com.son.daou.domain.shop.ShopHistory;
 import com.son.daou.dto.shop.ShopHistoryCreateRequest;
 import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.dto.shop.ShopHistoryUpdateRequest;
-import com.son.daou.properties.DaouConfigProperties;
-import com.son.daou.service.address.IpAddressAccessService;
 import com.son.daou.service.shop.ShopHistoryService;
 import com.son.daou.util.DateTimeUtils;
 import com.son.daou.util.serializer.LocalDateTimeSerializer;
-import org.junit.jupiter.api.*;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -41,36 +32,25 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@WebMvcTest(value = ShopHistoryController.class )
+@SpringBootTest
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ShopHistoryControllerTest {
+@Transactional
+public class ShopHistoryTest {
 
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
-    private ShopHistoryService service;
-
-    @MockBean
-    IpAddressAccessService ipAddressAccessService;
-
-    @MockBean
-    DaouConfigProperties daouConfigProperties;
-
-    @Mock
-    DaouConfigProperties.RateLimit rateLimit;
+    @Autowired
+    ShopHistoryService shopHistoryService;
 
     ShopHistoryCreateRequest createRequest1;
     ShopHistoryCreateRequest createRequest2;
-    ShopHistory history1 ;
-    ShopHistory history2 ;
     ShopHistoryUpdateRequest updateRequest1;
 
     ShopHistoryQueryParam searchParam ;
@@ -105,63 +85,23 @@ public class ShopHistoryControllerTest {
                 .deleteCount(242)
                 .build();
 
-        history1 = createRequest1.toEntity();
-        history2 = createRequest2.toEntity();
-
         searchParam = ShopHistoryQueryParam.builder()
                 .build();
     }
 
     @BeforeEach
     void beforeEach() {
-
-        doReturn(true).when(ipAddressAccessService).isAccessible(any());
-        doReturn(rateLimit).when(daouConfigProperties).getRateLimit();
-        doReturn(100).when(rateLimit).getCapacity();
-        doReturn(10).when(rateLimit).getTime();
-        doReturn("seconds").when(rateLimit).getUnit();
-
-
     }
-
 
     @Test()
     void success_shop_history_list() throws Exception {
 
-        Pageable pageable = PageRequest.of(0, 10);
-        doReturn(new PageImpl(List.of(history1.toResponse(), history2.toResponse()), pageable, 2L)).when(service).search(any(), any());
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-        // when
-        mvc.perform(
-                get("/shop-history")
-                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .queryParams(params)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.content", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(history2.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andDo(print());
-
-        // then // verify
-        verify(service).search(any(), any());
-
-    }
-
-    @Test
-    void success_shop_history_list_valid_query_param() throws Exception {
-
-        Pageable pageable = PageRequest.of(0, 10);
-        doReturn(new PageImpl(List.of(history1.toResponse(), history2.toResponse()), pageable, 2L)).when(service).search(any(), any());
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.put("direction", List.of("DESC"));
-        params.put("sort", List.of("dateTime"));
-
-        // when
+        // when // then
         mvc.perform(
                         get("/shop-history")
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -170,27 +110,48 @@ public class ShopHistoryControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.content", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(history2.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andExpect(jsonPath("$._links.self.href", containsString("/shop-history")))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response2.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
                 .andDo(print());
 
-        // then // verify
-        verify(service).search(any(), any());
+    }
+
+    @Test
+    void success_shop_history_list_valid_query_param() throws Exception {
+
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.put("direction", List.of("DESC"));
+        params.put("sort", List.of("dateTime"));
+
+        // when // then
+        mvc.perform(
+                        get("/shop-history")
+                                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                                .queryParams(params)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.content", hasSize(2)))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response2.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andDo(print());
 
     }
 
     @Test
     void fail_shop_history_list_bad_request_invalid_query_parameter() throws Exception {
         // given
-        Pageable pageable = PageRequest.of(0, 10);
-        doReturn(new PageImpl(List.of(history1.toResponse(), history2.toResponse()), pageable, 2L)).when(service).search(any(), any());
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("direction", List.of("123"));
         params.put("sort", List.of("not-param"));
 
-        // when
+        // when // then
         mvc.perform(
                         get("/shop-history")
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
@@ -202,44 +163,40 @@ public class ShopHistoryControllerTest {
                 .andExpect(jsonPath("$.errors[0].code", is(ErrorCode.BAD_REQUEST.getErrorCode())))
                 .andDo(print());
 
-        // then // verify
-        verify(service, times(0)).search(any(), any());
-
     }
-    
+
     @Test
     void success_shop_history_find() throws Exception {
         // given
-        Mockito.doReturn(history1.toResponse()).when(service).findById(history1.getDateTime());
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
+
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         // when // then
         mvc.perform(
-                    get("/shop-history/{id}", history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
-                            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                            .queryParams(params)
+                        get("/shop-history/{id}", response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                                .queryParams(params)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
                 .andDo(print());
-
-        // then // verify
-        verify(service).findById(any());
 
     }
 
     @Test
     void fail_shop_history_find_null_event_id() throws Exception {
         // given
-        doThrow(new ApiException(ErrorCode.NOT_FOUND_DATA, String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .when(service).findById(history1.getDateTime());
+//        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         // when //then
         mvc.perform(
-                        get("/shop-history/{id}", history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        get("/shop-history/{id}", createRequest1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
@@ -247,7 +204,7 @@ public class ShopHistoryControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].code", is(ErrorCode.NOT_FOUND_DATA.getErrorCode())))
-                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
+                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), createRequest1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
                 .andDo(print());
 
     }
@@ -255,9 +212,6 @@ public class ShopHistoryControllerTest {
     @Test
     void success_shop_history_create() throws Exception {
         // given
-
-        ShopHistoryResponse response = history1.toResponse();
-        doReturn(response).when(service).create(any());
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         // when // then
@@ -270,10 +224,8 @@ public class ShopHistoryControllerTest {
 
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.dateTime", is(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(createRequest1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
                 .andDo(print());
-        // then // verify
-//        verify(service).findById(any());
 
     }
 
@@ -301,9 +253,6 @@ public class ShopHistoryControllerTest {
                 .andExpect(jsonPath("$.errors", hasSize(4)))
                 .andExpect(jsonPath("$.errors[*].code", hasItem(ErrorCode.BAD_REQUEST.getErrorCode())))
                 .andDo(print());
-
-        // then // verify
-//        verify(service).findById(any());
 
     }
 
@@ -365,21 +314,14 @@ public class ShopHistoryControllerTest {
     @Test
     void success_shop_history_update() throws Exception {
         // given
-        ShopHistoryResponse response = ShopHistoryResponse.builder()
-                .dateTime(createRequest1.getDateTime())
-                .registerCount(updateRequest1.getRegisterCount())
-                .deleteCount(updateRequest1.getDeleteCount())
-                .payment(history1.getPayment())
-                .used(history1.getUsed())
-                .sales(history1.getSales())
-                .build();
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
-        doReturn(response).when(service).update(any());
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         // when // then
         mvc.perform(
-                        put("/shop-history/{id}", history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        put("/shop-history/{id}", response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
@@ -387,36 +329,28 @@ public class ShopHistoryControllerTest {
 
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
                 .andExpect(jsonPath("$.registerCount", is(updateRequest1.getRegisterCount())))
                 .andExpect(jsonPath("$.deleteCount", is(updateRequest1.getDeleteCount())))
-                .andExpect(jsonPath("$.payment", is(history1.getPayment().intValue())))
-                .andExpect(jsonPath("$.used", is(history1.getUsed().intValue())))
-                .andExpect(jsonPath("$.sales", is(history1.getSales().intValue())))
+                .andExpect(jsonPath("$.payment", is(response1.getPayment().intValue())))
+                .andExpect(jsonPath("$.used", is(response1.getUsed().intValue())))
+                .andExpect(jsonPath("$.sales", is(response1.getSales().intValue())))
                 .andDo(print());
-        // then // verify
 
     }
 
     @Test
     void fail_shop_history_update_not_found_shop_history() throws Exception {
         // given
-        ShopHistoryResponse response = ShopHistoryResponse.builder()
-                .registerCount(updateRequest1.getRegisterCount())
-                .deleteCount(updateRequest1.getDeleteCount())
-                .payment(history1.getPayment())
-                .used(history1.getUsed())
-                .sales(history1.getSales())
-                .build();
+        LocalDateTime failId = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).minus(2, ChronoUnit.DAYS);
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-        doThrow(new ApiException(ErrorCode.NOT_FOUND_DATA, String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .when(service).update(any());
-
         // when // then
         mvc.perform(
-                        put("/shop-history/{id}", history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        put("/shop-history/{id}", failId.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
@@ -426,34 +360,33 @@ public class ShopHistoryControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].code", is(ErrorCode.NOT_FOUND_DATA.getErrorCode())))
-                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
+                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), failId.format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
                 .andDo(print());
-        // then // verify
 
     }
 
     @Test
     void success_shop_history_delete() throws Exception {
         // given
-        ShopHistoryResponse response = history1.toResponse();
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
-        doReturn(response).when(service).delete(history1.getDateTime());
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         // when // then
         mvc.perform(
-                        delete("/shop-history/{id}", history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        delete("/shop-history/{id}", response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(response.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andExpect(jsonPath("$.registerCount", is(response.getRegisterCount())))
-                .andExpect(jsonPath("$.deleteCount", is(response.getDeleteCount())))
-                .andExpect(jsonPath("$.payment",  is(response.getPayment().intValue())))
-                .andExpect(jsonPath("$.used", is(response.getUsed().intValue())))
-                .andExpect(jsonPath("$.sales", is(response.getSales().intValue())))
+                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.registerCount", is(response1.getRegisterCount())))
+                .andExpect(jsonPath("$.deleteCount", is(response1.getDeleteCount())))
+                .andExpect(jsonPath("$.payment",  is(response1.getPayment().intValue())))
+                .andExpect(jsonPath("$.used", is(response1.getUsed().intValue())))
+                .andExpect(jsonPath("$.sales", is(response1.getSales().intValue())))
                 .andDo(print());
         // then // verify
 
@@ -462,14 +395,15 @@ public class ShopHistoryControllerTest {
     @Test
     void fail_shop_history_delete_not_found_shop_history() throws Exception {
         // given
-        doThrow(new ApiException(ErrorCode.NOT_FOUND_DATA, String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .when(service).delete(history1.getDateTime());
+        LocalDateTime failId = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).minus(2, ChronoUnit.DAYS);
+        ShopHistoryResponse response1 = shopHistoryService.create(createRequest1);
+        ShopHistoryResponse response2 = shopHistoryService.create(createRequest2);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         // when // then
         mvc.perform(
-                        delete("/shop-history/{id}", history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        delete("/shop-history/{id}", failId.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
@@ -477,7 +411,7 @@ public class ShopHistoryControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errors").isArray())
                 .andExpect(jsonPath("$.errors[0].code", is(ErrorCode.NOT_FOUND_DATA.getErrorCode())))
-                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
+                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), failId.format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
                 .andDo(print());
         // then // verify
 
