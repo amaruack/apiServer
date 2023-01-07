@@ -70,11 +70,10 @@ class FileProcessServiceTest {
         doReturn(List.of()).when(shopHistoryService).createAll(anyList());
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
         verify(shopHistoryService, times(1)).createAll(any());
-        assertNotNull(response);
 
         target.delete();
     }
@@ -97,11 +96,10 @@ class FileProcessServiceTest {
         doReturn(rootPath).when(daouConfigProperties).getRootPath();
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
         verify(shopHistoryService, times(0)).createAll(any());
-        assertEquals(0, response.size());
 
         target.delete();
     }
@@ -126,11 +124,10 @@ class FileProcessServiceTest {
         doReturn(List.of()).when(shopHistoryService).createAll(anyList());
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
         verify(shopHistoryService, times(1)).createAll(any());
-        assertNotNull(response);
 
         target.delete();
     }
@@ -153,11 +150,10 @@ class FileProcessServiceTest {
         doReturn(rootPath).when(daouConfigProperties).getRootPath();
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
         verify(shopHistoryService, times(0)).createAll(any());
-        assertEquals(0, response.size());
 
         target.delete();
     }

@@ -21,17 +21,11 @@ public class SchedulerConfig {
     @Autowired
     FileProcessService fileProcessService;
 
+//    @Scheduled(cron = "0/5 * * * * *")
     @Scheduled(cron = "0 0 0 * * *")
     public void fileReadScheduled() {
 
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
-        if (response.size() > 0) {
-            log.info("INSERT COMPLETED, ids=[{}]", response.stream()
-                    .map(res -> res.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
-                    .collect(Collectors.joining(",")));
-        } else {
-            log.error("INSERT FAIL ");
-        }
+        fileProcessService.fileProcess();
 
     }
 

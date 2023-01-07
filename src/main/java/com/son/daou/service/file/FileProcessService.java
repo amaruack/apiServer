@@ -32,14 +32,11 @@ public class FileProcessService {
 
     private final NumberFormat numberFormat = NumberFormat.getInstance();
 
-    public List<ShopHistoryResponse> fileProcess() {
-
-        List<ShopHistoryResponse> responses = List.of();
+    public void fileProcess() {
 
         File[] files = getFiles(daouConfigProperties.getRootPath());
         if (files == null || files.length == 0) {
             log.warn("NOT EXIST FILE IN ROOT PATH [{}]", daouConfigProperties.getRootPath());
-            return responses;
         }
         for (File file : files) {
             String extension = FileUtils.getFileExtension(file);
@@ -61,12 +58,14 @@ public class FileProcessService {
                         throw new RuntimeException(e);
                     }
                 }).collect(Collectors.toList());
-                responses = shopHistoryService.createAll(createRequests);
+                List<ShopHistoryResponse> responses = shopHistoryService.createAll(createRequests);
+                log.info("INSERT COMPLETED, ids=[{}]", responses.stream()
+                        .map(res -> res.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        .collect(Collectors.joining(",")));
             } else {
                 log.error("FILE DATA FORMAT ERROR [{}]", file.getName());
             }
         }
-        return responses;
     }
 
     /**

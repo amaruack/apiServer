@@ -1,14 +1,18 @@
 package com.son.daou.integration;
 
+import com.son.daou.dto.shop.ShopHistoryQueryParam;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.properties.DaouConfigProperties;
 import com.son.daou.service.file.FileProcessService;
+import com.son.daou.service.shop.ShopHistoryService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
@@ -31,6 +35,9 @@ class FileProcessTest {
 
     @Autowired
     FileProcessService fileProcessService;
+
+    @Autowired
+    ShopHistoryService shopHistoryService;
 
     @BeforeAll
     public void beforeAll() {
@@ -58,17 +65,18 @@ class FileProcessTest {
         try (FileInputStream fis = new FileInputStream(source);
              FileOutputStream fos = new FileOutputStream(target); ){
             fos.write(fis.readAllBytes());
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
-        assertNotNull(response);
-        assertEquals(24, response.size());
+        Page<ShopHistoryResponse> pages = shopHistoryService.search(ShopHistoryQueryParam.builder().build(), PageRequest.of(0, 99));
+
+        assertNotNull(pages);
+        assertEquals(24, pages.getTotalElements());
 
         target.delete();
     }
@@ -89,11 +97,12 @@ class FileProcessTest {
         }
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
-        assertNotNull(response);
-        assertEquals(0, response.size());
+        Page<ShopHistoryResponse> pages = shopHistoryService.search(ShopHistoryQueryParam.builder().build(), PageRequest.of(0, 99));
+        assertNotNull(pages);
+        assertEquals(0, pages.getTotalElements());
 
         target.delete();
     }
@@ -115,11 +124,12 @@ class FileProcessTest {
         }
 
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
-        assertNotNull(response);
-        assertEquals(24, response.size());
+        Page<ShopHistoryResponse> pages = shopHistoryService.search(ShopHistoryQueryParam.builder().build(), PageRequest.of(0, 99));
+        assertNotNull(pages);
+        assertEquals(24, pages.getTotalElements());
 
         target.delete();
     }
@@ -139,13 +149,13 @@ class FileProcessTest {
             throw new RuntimeException(e);
         }
 
-
         // when
-        List<ShopHistoryResponse> response = fileProcessService.fileProcess();
+        fileProcessService.fileProcess();
 
         // then
-        assertNotNull(response);
-        assertEquals(0, response.size());
+        Page<ShopHistoryResponse> pages = shopHistoryService.search(ShopHistoryQueryParam.builder().build(), PageRequest.of(0, 99));
+        assertNotNull(pages);
+        assertEquals(0, pages.getTotalElements());
 
         target.delete();
     }
