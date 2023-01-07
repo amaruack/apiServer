@@ -1,7 +1,12 @@
 package com.son.daou.process;
 
-import java.util.List;
+import com.son.daou.util.FileUtils;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 public abstract class AbstractFileReader implements FileReader{
 
     protected String separator = ",";
@@ -24,15 +29,30 @@ public abstract class AbstractFileReader implements FileReader{
     public boolean validate(List<List<String>> readDatas) {
 
         if (readDatas.size() != 24) {
+            log.error("data row size is not match [{}/24]");
             return false;
         }
 
-        for (List<String> strings : readDatas ) {
+        for (int i = 0; i < readDatas.size() ; i++) {
+            List<String> strings = readDatas.get(i);
             if (strings.size() != 6) {
+                log.error("data column size is not match [{}/6] in row {}", strings.size(), i+1);
                 return false;
             }
         }
 
+        // 같은 시간 데이터 가 있다면 false
+        List<String> ids = readDatas.stream()
+                .map( data -> data.get(FileUtils.INDEX_DATE_TIME)).collect(Collectors.toList());
+        List<String> dupleDateTimes = ids.stream()
+                .filter(data -> ids.indexOf(data) != ids.lastIndexOf(data))
+                .distinct()
+                .collect(Collectors.toList());
+
+        if ( dupleDateTimes.size() > 0 ) {
+            log.error("data datetime duplicate [{}]", String.join(",",dupleDateTimes));
+            return false;
+        }
         return true;
     }
 }
