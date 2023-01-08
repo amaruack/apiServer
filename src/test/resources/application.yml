@@ -3,7 +3,7 @@ daou:
     capacity: 20
     time: 10
     unit: seconds
-  root-path: /Users/son-youngjun/IdeaProjects/test/Daou/src/test/resources/file
+  root-path: ./src/test/resources/file
   access-ip-address:
     - 192.168.51.0/24
     - 127.0.0.1
