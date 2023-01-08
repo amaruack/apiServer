@@ -47,7 +47,7 @@ public class FileProcessService {
                 List<ShopHistoryCreateRequest> createRequests = readDatas.stream().map(readData -> {
                     try {
                         return ShopHistoryCreateRequest.builder()
-                                .dateTime(LocalDateTime.parse(readData.get(FileUtils.INDEX_DATE_TIME), DateTimeUtils.READ_FILE_DATE_TIME_FORMATTER))
+                                .dateTime(LocalDateTime.parse(readData.get(FileUtils.INDEX_DATE_TIME), DateTimeUtils.READ_FILE_DATE_TIME_FORMATTER).format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                                 .registerCount(numberFormat.parse(readData.get(FileUtils.INDEX_REGISTER_COUNT)).intValue())
                                 .deleteCount(numberFormat.parse(readData.get(FileUtils.INDEX_DELETE_COUNT)).intValue())
                                 .payment(numberFormat.parse(readData.get(FileUtils.INDEX_PAYMENT)).longValue())
@@ -60,7 +60,7 @@ public class FileProcessService {
                 }).collect(Collectors.toList());
                 List<ShopHistoryResponse> responses = shopHistoryService.createAll(createRequests);
                 log.info("INSERT COMPLETED, ids=[{}]", responses.stream()
-                        .map(res -> res.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        .map(res -> res.getDateTime())
                         .collect(Collectors.joining(",")));
             } else {
                 log.error("FILE DATA FORMAT ERROR [{}]", file.getName());

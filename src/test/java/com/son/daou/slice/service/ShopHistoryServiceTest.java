@@ -57,7 +57,7 @@ class ShopHistoryServiceTest {
     public void beforeAll() {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
         createRequest1 = ShopHistoryCreateRequest.builder()
-                .dateTime(now)
+                .dateTime(now.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -66,7 +66,7 @@ class ShopHistoryServiceTest {
                 .build();
 
         createRequest2 = ShopHistoryCreateRequest.builder()
-                .dateTime(now.plus(1, ChronoUnit.HOURS))
+                .dateTime(now.plus(1, ChronoUnit.HOURS).format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -101,7 +101,7 @@ class ShopHistoryServiceTest {
 
         // then
         assertEquals(pages.getTotalElements(), returnValue.getTotalElements());
-        assertEquals(pages.stream().map(history -> history.getDateTime()).collect(Collectors.toList()),
+        assertEquals(pages.stream().map(history -> history.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)).collect(Collectors.toList()),
                 returnValue.stream().map(response -> response.getDateTime()).collect(Collectors.toList()));
     }
 
@@ -116,7 +116,7 @@ class ShopHistoryServiceTest {
         ShopHistoryResponse returnValue = situationEventService.create(createRequest1);
 
         // then
-        assertEquals(history1.getDateTime(), returnValue.getDateTime());
+        assertEquals(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER), returnValue.getDateTime());
     }
 
     @Test
@@ -145,7 +145,7 @@ class ShopHistoryServiceTest {
         ShopHistoryResponse returnValue = situationEventService.findById(history1.getDateTime());
 
         // then
-        assertEquals(history1.getDateTime(), returnValue.getDateTime());
+        assertEquals(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER), returnValue.getDateTime());
         assertEquals(history1.getRegisterCount(), returnValue.getRegisterCount());
         assertEquals(history1.getDeleteCount(), returnValue.getDeleteCount());
         assertEquals(history1.getPayment(), returnValue.getPayment());
@@ -179,7 +179,7 @@ class ShopHistoryServiceTest {
         ShopHistoryResponse returnValue = situationEventService.update(updateRequest1);
 
         // then
-        assertEquals(history1.getDateTime(), returnValue.getDateTime());
+        assertEquals(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER), returnValue.getDateTime());
     }
 
     @Test
@@ -207,7 +207,7 @@ class ShopHistoryServiceTest {
         ShopHistoryResponse returnValue = situationEventService.delete(history1.getDateTime());
 
         // then
-        assertEquals(history1.getDateTime(), returnValue.getDateTime());
+        assertEquals(history1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER), returnValue.getDateTime());
     }
 
     @Test

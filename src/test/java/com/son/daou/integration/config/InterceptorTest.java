@@ -7,6 +7,7 @@ import com.son.daou.dto.shop.ShopHistoryCreateRequest;
 import com.son.daou.dto.shop.ShopHistoryResponse;
 import com.son.daou.properties.DaouConfigProperties;
 import com.son.daou.service.shop.ShopHistoryService;
+import com.son.daou.util.DateTimeUtils;
 import com.son.daou.util.serializer.LocalDateTimeSerializer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +68,7 @@ public class InterceptorTest {
     void beforeAll() {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
         createRequest1 = ShopHistoryCreateRequest.builder()
-                .dateTime(now)
+                .dateTime(now.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -76,7 +77,7 @@ public class InterceptorTest {
                 .build();
 
         createRequest2 = ShopHistoryCreateRequest.builder()
-                .dateTime(now.plus(1, ChronoUnit.HOURS))
+                .dateTime(now.plus(1, ChronoUnit.HOURS).format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)

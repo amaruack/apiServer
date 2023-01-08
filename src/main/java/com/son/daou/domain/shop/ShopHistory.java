@@ -2,6 +2,7 @@ package com.son.daou.domain.shop;
 
 import com.son.daou.domain.DaouEntity;
 import com.son.daou.dto.shop.ShopHistoryResponse;
+import com.son.daou.util.DateTimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,7 +53,7 @@ public class ShopHistory implements DaouEntity {
 
     public ShopHistoryResponse toResponse(){
         return ShopHistoryResponse.builder()
-                .dateTime(dateTime)
+                .dateTime(dateTime.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(registerCount)
                 .deleteCount(deleteCount)
                 .payment(payment)

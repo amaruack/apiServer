@@ -128,7 +128,7 @@ public class ShopHistoryRepositoryTest {
         Page<ShopHistory> searchData =  shopHistoryRepository.search(queryParam, pageRequest);
 
         //then
-        assertEquals(3, searchData.getTotalElements());
+        assertEquals(4, searchData.getTotalElements());
 
     }
 

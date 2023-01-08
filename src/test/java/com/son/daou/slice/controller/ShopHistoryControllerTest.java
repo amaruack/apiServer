@@ -82,7 +82,7 @@ public class ShopHistoryControllerTest {
 
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
         createRequest1 = ShopHistoryCreateRequest.builder()
-                .dateTime(now)
+                .dateTime(now.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -91,7 +91,7 @@ public class ShopHistoryControllerTest {
                 .build();
 
         createRequest2 = ShopHistoryCreateRequest.builder()
-                .dateTime(now.plus(1, ChronoUnit.HOURS))
+                .dateTime(now.plus(1, ChronoUnit.HOURS).format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -327,7 +327,7 @@ public class ShopHistoryControllerTest {
                 )
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", hasSize(6)))
                 .andDo(print());
 
     }
@@ -448,7 +448,7 @@ public class ShopHistoryControllerTest {
                                 .queryParams(params)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(response.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(response.getDateTime())))
                 .andExpect(jsonPath("$.registerCount", is(response.getRegisterCount())))
                 .andExpect(jsonPath("$.deleteCount", is(response.getDeleteCount())))
                 .andExpect(jsonPath("$.payment",  is(response.getPayment().intValue())))

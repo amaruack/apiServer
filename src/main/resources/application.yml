@@ -12,3 +12,17 @@ daou:
 spring:
   application:
     name: daou
+
+springdoc:
+  #  version: '@springdoc.version@'
+  api-docs:
+    groups:
+      enabled: true
+    resolve-schema-properties: true
+  swagger-ui:
+    path: /swagger-ui
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+  show-actuator: false

@@ -21,7 +21,6 @@ public class SchedulerConfig {
     @Autowired
     FileProcessService fileProcessService;
 
-//    @Scheduled(cron = "0/5 * * * * *")
     @Scheduled(cron = "0 0 0 * * *")
     public void fileReadScheduled() {
 

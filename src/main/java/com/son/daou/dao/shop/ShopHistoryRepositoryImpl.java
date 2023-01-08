@@ -42,8 +42,8 @@ public class ShopHistoryRepositoryImpl extends AbstractRepositorySearch<ShopHist
 
     public BooleanExpression[] createWhere(ShopHistoryQueryParam queryParam){
         return new BooleanExpression[]{
-            condition(queryParam.getStartDatetime(), root.dateTime :: after),
-            condition(queryParam.getEndDatetime(), root.dateTime :: before ),
+            condition(queryParam.getStartDatetime(), root.dateTime :: goe),
+            condition(queryParam.getEndDatetime(), root.dateTime :: lt ),
         };
     }
 }

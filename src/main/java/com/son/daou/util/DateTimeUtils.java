@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtils {
 
+    public static final String DATE_TIME_ID_REGEX = "20[0-3][0-9]-[0-2][0-9]-[0-3][0-9]T[0-5][0-9]";
+
     public static final String ZONE_NAME = "Asia/Seoul";
     public static final ZoneId ZONE = ZoneId.of(ZONE_NAME);
     public static final String LOCAL_OFFSET_ID = "+09:00";

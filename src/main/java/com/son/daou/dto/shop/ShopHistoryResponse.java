@@ -2,6 +2,7 @@ package com.son.daou.dto.shop;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.son.daou.util.DateTimeUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,8 @@ import java.time.LocalDateTime;
 public class ShopHistoryResponse {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateTimeUtils.DATE_TIME_ID_PATTERN, timezone = DateTimeUtils.ZONE_NAME)
-    LocalDateTime dateTime;
+    @Schema(pattern = DateTimeUtils.DATE_TIME_ID_REGEX, title = "date time", example = "2023-01-07T00")
+    String dateTime;
     Integer registerCount;
     Integer deleteCount;
     Long payment;

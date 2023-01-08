@@ -62,7 +62,7 @@ public class ShopHistoryTest {
 
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
         createRequest1 = ShopHistoryCreateRequest.builder()
-                .dateTime(now)
+                .dateTime(now.format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -71,7 +71,7 @@ public class ShopHistoryTest {
                 .build();
 
         createRequest2 = ShopHistoryCreateRequest.builder()
-                .dateTime(now.plus(1, ChronoUnit.HOURS))
+                .dateTime(now.plus(1, ChronoUnit.HOURS).format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
                 .registerCount(10)
                 .deleteCount(20)
                 .payment(10000L)
@@ -110,8 +110,8 @@ public class ShopHistoryTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.content", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response2.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response1.getDateTime())))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response2.getDateTime())))
                 .andDo(print());
 
     }
@@ -135,8 +135,8 @@ public class ShopHistoryTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.content", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
-                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response2.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response1.getDateTime())))
+                .andExpect(jsonPath("$._embedded.content[*].dateTime", hasItem(response2.getDateTime())))
                 .andDo(print());
 
     }
@@ -175,13 +175,13 @@ public class ShopHistoryTest {
 
         // when // then
         mvc.perform(
-                        get("/shop-history/{id}", response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        get("/shop-history/{id}", response1.getDateTime())
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime())))
                 .andDo(print());
 
     }
@@ -196,7 +196,7 @@ public class ShopHistoryTest {
 
         // when //then
         mvc.perform(
-                        get("/shop-history/{id}", createRequest1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        get("/shop-history/{id}", createRequest1.getDateTime())
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
@@ -204,7 +204,7 @@ public class ShopHistoryTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.errors[0].code", is(ErrorCode.NOT_FOUND_DATA.getErrorCode())))
-                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), createRequest1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER)))))
+                .andExpect(jsonPath("$.errors[0].detailMessage", is(String.format(ErrorCode.NOT_FOUND_DATA.getDetailMessageFormat(), createRequest1.getDateTime()))))
                 .andDo(print());
 
     }
@@ -224,7 +224,7 @@ public class ShopHistoryTest {
 
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.dateTime", is(createRequest1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(createRequest1.getDateTime())))
                 .andDo(print());
 
     }
@@ -276,7 +276,7 @@ public class ShopHistoryTest {
                 )
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors", hasSize(6)))
                 .andDo(print());
 
     }
@@ -321,7 +321,7 @@ public class ShopHistoryTest {
 
         // when // then
         mvc.perform(
-                        put("/shop-history/{id}", response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        put("/shop-history/{id}", response1.getDateTime())
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
@@ -329,7 +329,7 @@ public class ShopHistoryTest {
 
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime())))
                 .andExpect(jsonPath("$.registerCount", is(updateRequest1.getRegisterCount())))
                 .andExpect(jsonPath("$.deleteCount", is(updateRequest1.getDeleteCount())))
                 .andExpect(jsonPath("$.payment", is(response1.getPayment().intValue())))
@@ -375,13 +375,13 @@ public class ShopHistoryTest {
 
         // when // then
         mvc.perform(
-                        delete("/shop-history/{id}", response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))
+                        delete("/shop-history/{id}", response1.getDateTime())
                                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                                 .queryParams(params)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime().format(DateTimeUtils.DATE_TIME_ID_FORMATTER))))
+                .andExpect(jsonPath("$.dateTime", is(response1.getDateTime())))
                 .andExpect(jsonPath("$.registerCount", is(response1.getRegisterCount())))
                 .andExpect(jsonPath("$.deleteCount", is(response1.getDeleteCount())))
                 .andExpect(jsonPath("$.payment",  is(response1.getPayment().intValue())))
