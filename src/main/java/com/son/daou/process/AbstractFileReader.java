@@ -1,8 +1,11 @@
 package com.son.daou.process;
 
+import com.son.daou.util.DateTimeUtils;
 import com.son.daou.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,11 +51,20 @@ public abstract class AbstractFileReader implements FileReader{
                 .filter(data -> ids.indexOf(data) != ids.lastIndexOf(data))
                 .distinct()
                 .collect(Collectors.toList());
-
         if ( dupleDateTimes.size() > 0 ) {
-            log.error("data datetime duplicate [{}]", String.join(",",dupleDateTimes));
+            log.error("data datetime duplicate [{}]", String.join(",", dupleDateTimes));
             return false;
         }
+
+        // 같은 날이 아니면 false
+        List<String> dates = ids.stream()
+                .map(id -> LocalDateTime.parse(id, DateTimeUtils.READ_FILE_DATE_TIME_FORMATTER).format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .distinct().collect(Collectors.toList());
+        if (dates.size() > 1) {
+            log.error("data datetime is not on single day [{}]", String.join(",", dates));
+            return false;
+        }
+
         return true;
     }
 }

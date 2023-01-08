@@ -52,7 +52,7 @@ class FileProcessTest {
         // when
         File[] files = fileProcessService.getFiles(rootPath);
         // then
-        assertEquals(4, files.length);
+        assertEquals(12, files.length);
     }
 
     @Test

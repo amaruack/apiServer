@@ -1,5 +1,6 @@
 package com.son.daou.slice.process;
 
+import com.son.daou.process.CsvFileReader;
 import com.son.daou.process.FileReader;
 import com.son.daou.process.TxtFileReader;
 import org.junit.jupiter.api.Test;
@@ -47,4 +48,60 @@ public class TxtFileReaderTest {
 
     }
 
+    @Test
+    void fail_text_file_read_validation_check_row_length() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/txtFile_validation_01.txt");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void fail_text_file_read_validation_check_column_length() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/txtFile_validation_02.txt");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void fail_text_file_read_validation_check_duplicate_id() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/txtFile_validation_03.txt");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void fail_text_file_read_validation_check_single_day() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/txtFile_validation_04.txt");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+    
 }

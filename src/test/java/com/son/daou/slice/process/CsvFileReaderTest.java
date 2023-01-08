@@ -51,4 +51,61 @@ public class CsvFileReaderTest {
 
     }
 
+    @Test
+    void fail_csv_file_read_validation_check_row_length() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/csvFile_validation_01.csv");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void fail_csv_file_read_validation_check_column_length() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/csvFile_validation_02.csv");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void fail_csv_file_read_validation_check_duplicate_id() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/csvFile_validation_03.csv");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void fail_csv_file_read_validation_check_single_day() throws FileNotFoundException {
+        //given
+        File file = ResourceUtils.getFile("classpath:sample/csvFile_validation_04.csv");
+        FileReader fileReader = new CsvFileReader();
+        List<List<String>> readDatas = fileReader.read(file);
+
+        //when
+        boolean result = fileReader.validate(readDatas);
+
+        //then
+        assertFalse(result);
+    }
+
+
 }
